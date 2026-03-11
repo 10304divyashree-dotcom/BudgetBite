@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<style>
+body{
+font-family:Arial;
+background:#f2f2f2;
+text-align:center;
+padding-top:100px;
+}
+form{
+background:white;
+padding:30px;
+display:inline-block;
+border-radius:10px;
+}
+input{
+display:block;
+margin:10px;
+padding:10px;
+width:200px;
+}
+button{
+padding:10px 20px;
+background:#ff5200;
+color:white;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Food Budget Login</h2>
+
+<form action="/login" method="post">
+
+<input type="email" name="email" placeholder="Email" required>
+
+<input type="password" name="password" placeholder="Password" required>
+
+<button type="submit">Login</button>
+
+<p>New User?</p>
+
+<a href="/register">Register</a>
+
+</form>
+
+</body>
+</html>

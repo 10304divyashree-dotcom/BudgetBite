@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Your Cart</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+}
+
+.container{
+width:70%;
+margin:auto;
+}
+
+.cart-item{
+background:white;
+padding:15px;
+margin:15px;
+border-radius:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+button{
+background:red;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:5px;
+}
+
+.total{
+background:white;
+padding:20px;
+margin:20px;
+border-radius:10px;
+font-size:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Your Cart 🛒</h2>
+
+{% for item in cart_items %}
+
+<div class="cart-item">
+
+<div>
+<h3>{{item.name}}</h3>
+<p>{{item.hotel}}</p>
+</div>
+
+<div>
+₹{{item.price}}
+</div>
+
+<div>
+<a href="/remove/{{item.id}}">
+<button>Remove</button>
+</a>
+</div>
+
+</div>
+
+{% endfor %}
+
+<div class="total">
+
+<b>Total: ₹{{total}}</b>
+
+</div>
+
+<a href="/">
+<button>Back to Home</button>
+</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Food Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f4f4;
+}
+
+/* HEADER */
+
+header{
+background:#ff5200;
+color:white;
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+.cart{
+background:white;
+color:#ff5200;
+padding:8px 15px;
+border-radius:20px;
+font-weight:bold;
+}
+
+/* SEARCH BAR */
+
+.search-container{
+display:flex;
+justify-content:center;
+margin:30px;
+}
+
+.search-container input{
+width:600px;
+padding:12px;
+font-size:16px;
+border:1px solid #ccc;
+border-radius:6px 0 0 6px;
+}
+
+.search-container button{
+padding:12px 20px;
+background:#ff5200;
+color:white;
+border:none;
+border-radius:0 6px 6px 0;
+cursor:pointer;
+}
+
+/* BUDGET BOX */
+
+.budget-box{
+background:white;
+margin:20px auto;
+width:80%;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* RESTAURANT GRID */
+
+.food-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+padding:20px 80px;
+}
+
+/* FOOD CARD */
+
+.food-card{
+background:white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.food-card:hover{
+transform:scale(1.05);
+}
+
+.food-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.food-info{
+padding:12px;
+}
+
+.hotel{
+color:#777;
+font-size:14px;
+}
+
+.price{
+color:green;
+font-weight:bold;
+}
+
+.rating{
+color:#ffa500;
+font-size:14px;
+}
+
+/* BUTTON */
+
+button{
+background:#ff5200;
+color:white;
+border:none;
+padding:10px;
+width:100%;
+border-radius:5px;
+cursor:pointer;
+margin-top:8px;
+}
+
+button:hover{
+background:#e64500;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+BudgetBite
+</div>
+
+<div>
+Welcome {{name}}
+</div>
+
+<div class="cart">
+<a href="/cart" style="text-decoration:none;color:#ff5200;">
+🛒 Cart ({{cart_count}})
+</a>
+</div>
+
+</header>
+
+
+<!-- SEARCH -->
+
+<div class="search-container">
+
+<form action="/search">
+
+<input type="text" name="q" placeholder="Search for food or restaurant">
+
+<button type="submit">Search</button>
+
+</form>
+
+</div>
+
+
+<!-- BUDGET DETAILS -->
+
+<div class="budget-box">
+
+<h3>Budget Details</h3>
+
+<p>Total Budget: ₹{{budget}}</p>
+
+<p>Spent: ₹{{spent}}</p>
+
+<p>Remaining: ₹{{remaining}}</p>
+
+</div>
+
+
+<h2 style="text-align:center;">Popular Restaurants</h2>
+
+
+<div class="food-grid">
+
+{% for food in foods %}
+
+<div class="food-card">
+
+<img src="{{ url_for('static', filename='images/' + food.image) }}">
+
+<div class="food-info">
+
+<h3>{{food.name}}</h3>
+
+<p class="hotel">{{food.hotel}}</p>
+
+<p class="rating">⭐ 4.3</p>
+
+<p class="price">₹{{food.price}}</p>
+
+<a href="/add_to_cart/{{food.id}}">
+<button>Add to Cart</button>
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+</body>
+</html>

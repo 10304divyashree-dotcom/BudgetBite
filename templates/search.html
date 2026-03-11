@@ -1,0 +1,28 @@
+<h2>Search Food</h2>
+
+<form action="/search">
+<input type="text" name="q" placeholder="Search food">
+<button type="submit">Search</button>
+</form>
+
+<br>
+
+{% for food in foods %}
+
+<div style="border:1px solid gray; padding:10px; width:250px; margin-bottom:10px">
+
+<img src="{{ url_for('static', filename='images/' + food.image) }}" width="200">
+
+<h3>{{food.name}}</h3>
+
+<p><b>{{food.hotel}}</b></p>
+
+<p>Price: ₹{{food.price}}</p>
+
+<a href="/add_to_cart/{{food.id}}">
+<button>Add to Cart</button>
+</a>
+
+</div>
+
+{% endfor %}
