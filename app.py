@@ -6,16 +6,15 @@ app = Flask(__name__)
 app.secret_key = "foodbudget"
 
 
-# FOOD MENU
 foods = [
-{"id":1,"name":"Chicken Biryani","price":180,"image":"chicken_biryani.jpg"},
-{"id":2,"name":"Pizza","price":200,"image":"pizza.jpg"},
-{"id":3,"name":"Dosa","price":80,"image":"dosa.jpg"},
-{"id":4,"name":"Noodles","price":120,"image":"noodles.jpg"},
-{"id":5,"name":"Burger","price":150,"image":"burger.jpg"},
-{"id":6,"name":"Fried Rice","price":140,"image":"fried_rice.jpg"},
-{"id":7,"name":"Sandwich","price":90,"image":"sandwich.jpg"},
-{"id":8,"name":"Ice Cream","price":70,"image":"ice_cream.jpg"}
+{"id":1,"name":"Chicken Biryani","price":180,"image":"chicken_biryani.jpg","category":"biryani"},
+{"id":2,"name":"Pizza","price":200,"image":"pizza.jpg","category":"pizza"},
+{"id":3,"name":"Dosa","price":80,"image":"dosa.jpg","category":"south"},
+{"id":4,"name":"Noodles","price":120,"image":"noodles.jpg","category":"chinese"},
+{"id":5,"name":"Burger","price":150,"image":"burger.jpg","category":"fastfood"},
+{"id":6,"name":"Fried Rice","price":140,"image":"fried_rice.jpg","category":"chinese"},
+{"id":7,"name":"Sandwich","price":90,"image":"sandwich.jpg","category":"fastfood"},
+{"id":8,"name":"Ice Cream","price":70,"image":"ice_cream.jpg","category":"dessert"}
 ]
 
 
@@ -186,6 +185,22 @@ def search():
         results = foods
 
     return render_template("search.html", foods=results)
+
+# Category
+@app.route("/category/<cat>")
+def category(cat):
+
+    category_foods = []
+
+    for food in foods:
+        if food["category"] == cat:
+            category_foods.append(food)
+
+    return render_template(
+        "category.html",
+        foods=category_foods,
+        category=cat
+    )
 
 
 # ADD TO CART
