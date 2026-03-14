@@ -136,6 +136,90 @@ margin-top:8px;
 button:hover{
 background:#e64500;
 }
+/* CATEGORY SECTION */
+
+.category-section{
+text-align:center;
+margin-top:40px;
+}
+
+.category-container{
+display:flex;
+justify-content:center;
+gap:50px;
+flex-wrap:nowrap;
+margin-top:30px;
+}
+
+.category-item{
+text-align:center;
+}
+
+.category-item img{
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:50%;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+transition:0.3s;
+}
+
+.category-item img:hover{
+transform:scale(1.1);
+}
+
+.category-item a{
+text-decoration:none;
+color:#333;
+font-weight:bold;
+display:block;
+margin-top:10px;
+}
+
+/* FOOTER */
+
+footer{
+background:#222;
+color:white;
+padding:30px;
+margin-top:40px;
+}
+
+.footer-container{
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+width:80%;
+margin:auto;
+}
+
+.footer-section{
+margin:10px;
+}
+
+.footer-section h3{
+margin-bottom:10px;
+}
+
+.footer-section p,
+.footer-section a{
+color:#ccc;
+font-size:14px;
+text-decoration:none;
+display:block;
+margin:5px 0;
+}
+
+.footer-section a:hover{
+color:white;
+}
+
+.footer-bottom{
+text-align:center;
+margin-top:20px;
+font-size:13px;
+color:#aaa;
+}
 
 </style>
 
@@ -200,7 +284,57 @@ Welcome {{name}}
 </a>
 </div>
 
+<div class="category-section">
 
+<h2>Order our best food options</h2>
+
+<div class="category-container">
+
+<div class="category-item">
+<a href="/category/south">
+<img src="{{ url_for('static', filename='images/dosa.jpg') }}">
+<p>South Indian</p>
+</a>
+</div>
+
+<div class="category-item">
+<a href="/category/biryani">
+<img src="{{ url_for('static', filename='images/chicken_biryani.jpg') }}">
+<p>Biryani</p>
+</a>
+</div>
+
+<div class="category-item">
+<a href="/category/chinese">
+<img src="{{ url_for('static', filename='images/noodles.jpg') }}">
+<p>Chinese</p>
+</a>
+</div>
+
+<div class="category-item">
+<a href="/category/pizza">
+<img src="{{ url_for('static', filename='images/pizza.jpg') }}">
+<p>Pizza</p>
+</a>
+</div>
+
+<div class="category-item">
+<a href="/category/fastfood">
+<img src="{{ url_for('static', filename='images/burger.jpg') }}">
+<p>Fast Food</p>
+</a>
+</div>
+
+<div class="category-item">
+<a href="/category/dessert">
+<img src="{{ url_for('static', filename='images/ice_cream.jpg') }}">
+<p>Desserts</p>
+</a>
+</div>
+
+</div>
+
+</div>
 <h2 style="text-align:center;">Popular Restaurants</h2>
 
 
@@ -234,6 +368,42 @@ Welcome {{name}}
 
 </div>
 
+<footer>
 
+<div class="footer-container">
+
+<div class="footer-section">
+<h3>BudgetBite</h3>
+<p>Your smart food ordering app with budget tracking.</p>
+</div>
+
+<div class="footer-section">
+<h3>Quick Links</h3>
+<a href="/home">Home</a>
+<a href="/cart">Cart</a>
+<a href="/orders">Orders</a>
+</div>
+
+<div class="footer-section">
+<h3>Categories</h3>
+<p>Biryani</p>
+<p>Pizza</p>
+<p>Chinese</p>
+<p>Fast Food</p>
+</div>
+
+<div class="footer-section">
+<h3>Contact</h3>
+<p>Email: support@budgetbite.com</p>
+<p>Phone: +91 9876543210</p>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+© 2026 BudgetBite | All Rights Reserved
+</div>
+
+</footer>
 </body>
 </html>
