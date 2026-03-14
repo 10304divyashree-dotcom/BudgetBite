@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 import sqlite3
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "foodbudget"
 
 
-# FOOD MENU DATA (Dynamic Images)
+# FOOD MENU
 foods = [
 {"id":1,"name":"Chicken Biryani","price":180,"image":"chicken_biryani.jpg"},
 {"id":2,"name":"Pizza","price":200,"image":"pizza.jpg"},
@@ -16,13 +17,15 @@ foods = [
 {"id":7,"name":"Sandwich","price":90,"image":"sandwich.jpg"},
 {"id":8,"name":"Ice Cream","price":70,"image":"ice_cream.jpg"}
 ]
+
+
 # DATABASE
 def init_db():
 
     conn = sqlite3.connect("database.db")
-    c = conn.cursor()
+    cursor = conn.cursor()
 
-    c.execute("""
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
@@ -30,6 +33,16 @@ def init_db():
         password TEXT,
         budget INTEGER,
         spent INTEGER
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS orders(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        food_name TEXT,
+        price INTEGER,
+        order_time TEXT
     )
     """)
 
@@ -87,7 +100,6 @@ def login_user():
     )
 
     user = c.fetchone()
-
     conn.close()
 
     if user:
@@ -103,6 +115,7 @@ def login_user():
 # SET BUDGET
 @app.route("/budget", methods=["GET","POST"])
 def budget():
+
     if "user_id" not in session:
         return redirect("/")
 
@@ -129,6 +142,7 @@ def budget():
 # HOME PAGE
 @app.route("/home")
 def home():
+
     if "user_id" not in session:
         return redirect("/")
 
@@ -147,19 +161,23 @@ def home():
     spent = data[1]
     remaining = budget - spent
 
+    cart_count = len(session.get("cart", []))
+
     return render_template(
         "home.html",
         name=session["name"],
         budget=budget,
         spent=spent,
         remaining=remaining,
-        foods=foods
+        foods=foods,
+        cart_count=cart_count
     )
 
 
-# SEARCH PAGE
+# SEARCH
 @app.route("/search")
 def search():
+
     query = request.args.get("q")
 
     if query:
@@ -168,7 +186,6 @@ def search():
         results = foods
 
     return render_template("search.html", foods=results)
-    
 
 
 # ADD TO CART
@@ -183,10 +200,25 @@ def add_to_cart(id):
 
     return redirect("/cart")
 
+@app.route("/remove/<int:id>")
+def remove(id):
 
+    if "cart" in session:
+        cart = session["cart"]
+
+        if id in cart:
+            cart.remove(id)
+
+        session["cart"] = cart
+        session.modified = True
+
+    return redirect("/cart")
 # CART PAGE
 @app.route("/cart")
 def cart():
+
+    if "user_id" not in session:
+        return redirect("/")
 
     cart_items = []
 
@@ -201,7 +233,7 @@ def cart():
 
     return render_template(
         "cart.html",
-        items=cart_items,
+        cart_items=cart_items,
         total=total
     )
 
@@ -210,20 +242,53 @@ def cart():
 @app.route("/place_order")
 def place_order():
 
+    if "user_id" not in session:
+        return redirect("/")
+
     cart_items = []
 
     if "cart" in session:
-
         for item in session["cart"]:
             for food in foods:
                 if food["id"] == item:
                     cart_items.append(food)
 
     total = sum(item["price"] for item in cart_items)
+    if total == 0:
+     flash("🛒 Your cart is empty!", "danger")
+     return redirect("/cart")
 
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
+    c.execute(
+        "SELECT budget, spent FROM users WHERE id=?",
+        (session["user_id"],)
+    )
+
+    data = c.fetchone()
+
+    budget = data[0]
+    spent = data[1]
+
+    if spent + total > budget:
+        conn.close()
+        flash("⚠️ Order exceeds your budget! Please remove some items.", "danger")
+        return redirect("/cart")
+
+    # SAVE ORDERS
+    for item in cart_items:
+        c.execute(
+            "INSERT INTO orders (user_id, food_name, price, order_time) VALUES (?,?,?,?)",
+            (
+                session["user_id"],
+                item["name"],
+                item["price"],
+                datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+            )
+        )
+
+    # UPDATE SPENT
     c.execute(
         "UPDATE users SET spent = spent + ? WHERE id=?",
         (total, session["user_id"])
@@ -234,7 +299,39 @@ def place_order():
 
     session["cart"] = []
 
-    return redirect("/home")
+    flash("✅ Order placed successfully!", "success")
+
+    return redirect("/orders")
+
+
+# ORDER HISTORY
+@app.route("/orders")
+def orders():
+
+    if "user_id" not in session:
+        return redirect("/")
+
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    c.execute(
+        "SELECT food_name, price, order_time FROM orders WHERE user_id=? ORDER BY order_time DESC",
+        (session["user_id"],)
+    )
+
+    order_list = c.fetchall()
+
+    conn.close()
+
+    return render_template("orders.html", orders=order_list)
+
+
+# LOGOUT
+@app.route("/logout")
+def logout():
+
+    session.clear()
+    return redirect("/")
 
 
 if __name__ == "__main__":
