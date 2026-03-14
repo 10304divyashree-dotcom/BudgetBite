@@ -42,6 +42,14 @@ border-radius:10px;
 font-size:20px;
 }
 
+.alert{
+background:#ff4d4d;
+color:white;
+padding:12px;
+border-radius:8px;
+margin:15px 0;
+}
+
 </style>
 
 </head>
@@ -51,6 +59,15 @@ font-size:20px;
 <div class="container">
 
 <h2>Your Cart 🛒</h2>
+
+<!-- ⭐ FLASH MESSAGE ADDED HERE -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
 
 {% for item in cart_items %}
 
@@ -81,7 +98,13 @@ font-size:20px;
 
 </div>
 
-<a href="/">
+<br>
+
+<a href="/place_order">
+<button style="background:green;">Place Order</button>
+</a>
+
+<a href="{{url_for('home')}}">
 <button>Back to Home</button>
 </a>
 
