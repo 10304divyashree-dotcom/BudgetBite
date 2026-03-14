@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Your Orders</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+margin:0;
+padding:20px;
+}
+
+.order-card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+.price{
+color:green;
+font-weight:bold;
+}
+
+.time{
+color:gray;
+font-size:14px;
+}
+
+button{
+background:#ff5200;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#e64500;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Your Orders 📦</h2>
+
+{% if orders %}
+
+{% for order in orders %}
+
+<div class="order-card">
+
+<h3>🍽 {{order[0]}}</h3>
+
+<p class="price">Price: ₹{{order[1]}}</p>
+
+<p class="time">🕒 Ordered at: {{order[2]}}</p>
+
+</div>
+
+
+{% endfor %}
+
+{% else %}
+
+<p>No orders placed yet.</p>
+
+{% endif %}
+
+<br>
+
+<a href="/home">
+<button>Back to Home</button>
+</a>
+
+</body>
+</html>
