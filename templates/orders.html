@@ -4,44 +4,103 @@
 
 <title>Your Orders</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 
 body{
 font-family:Arial;
-background:#f5f5f5;
+background:#111;
+color:white;
 margin:0;
 padding:20px;
 }
 
+/* HEADER */
+
+.header{
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+}
+
+.back-btn{
+background:#d4a017;
+color:black;
+padding:8px 15px;
+border-radius:5px;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* ORDER CARD */
+
 .order-card{
-background:white;
+background:#1c1c1c;
 padding:15px;
 margin-bottom:15px;
 border-radius:10px;
-box-shadow:0 3px 8px rgba(0,0,0,0.1);
+box-shadow:0 3px 8px rgba(0,0,0,0.5);
 }
 
+/* TEXT */
+
 .price{
-color:green;
+color:#d4a017;
 font-weight:bold;
 }
 
 .time{
-color:gray;
+color:#aaa;
 font-size:14px;
 }
 
+/* STATUS */
+
+.status{
+margin-top:8px;
+font-weight:bold;
+}
+
+.status.Preparing{
+color:orange;
+}
+
+.status.Delivered{
+color:limegreen;
+}
+
+/* EMPTY */
+
+.empty{
+text-align:center;
+margin-top:50px;
+color:#aaa;
+}
+
+/* BUTTON */
+
 button{
-background:#ff5200;
-color:white;
+background:#d4a017;
+color:black;
 border:none;
 padding:10px 20px;
 border-radius:5px;
 cursor:pointer;
+font-weight:bold;
 }
 
 button:hover{
-background:#e64500;
+background:#b89012;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+body{
+padding:10px;
+}
 }
 
 </style>
@@ -50,7 +109,10 @@ background:#e64500;
 
 <body>
 
+<div class="header">
+<a href="/home" class="back-btn">⬅ Back</a>
 <h2>Your Orders 📦</h2>
+</div>
 
 {% if orders %}
 
@@ -60,25 +122,30 @@ background:#e64500;
 
 <h3>🍽 {{order[0]}}</h3>
 
-<p class="price">Price: ₹{{order[1]}}</p>
+<p class="price">₹{{order[1]}}</p>
 
 <p class="time">🕒 Ordered at: {{order[2]}}</p>
 
-</div>
+<p class="status {{order[3]}}">
+Status: {{order[3]}}
+</p>
 
+</div>
 
 {% endfor %}
 
 {% else %}
 
+<div class="empty">
 <p>No orders placed yet.</p>
+</div>
 
 {% endif %}
 
 <br>
 
 <a href="/home">
-<button>Back to Home</button>
+<button>🏠 Back to Home</button>
 </a>
 
 </body>
