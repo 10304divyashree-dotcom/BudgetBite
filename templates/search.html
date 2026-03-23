@@ -1,3 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Search Food</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:black;
+color:white;
+text-align:center;
+}
+
+h2{
+color:#ffd700;
+}
+
+form{
+margin-bottom:20px;
+}
+
+input{
+padding:10px;
+width:220px;
+background:black;
+color:white;
+border:1px solid #ffd700;
+}
+
+input::placeholder{
+color:#ccc;
+}
+
+button{
+padding:8px 15px;
+background:#ffd700;
+color:black;
+border:none;
+font-weight:bold;
+cursor:pointer;
+}
+
+.food-card{
+border:1px solid #ffd700;
+padding:10px;
+width:250px;
+margin:15px auto;
+background:#111;
+border-radius:8px;
+}
+
+.food-card img{
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
 <h2>Search Food</h2>
 
 <form action="/search">
@@ -9,7 +71,7 @@
 
 {% for food in foods %}
 
-<div style="border:1px solid gray; padding:10px; width:250px; margin-bottom:10px">
+<div class="food-card">
 
 <img src="{{ url_for('static', filename='images/' + food.image) }}" width="200">
 
@@ -26,3 +88,6 @@
 </div>
 
 {% endfor %}
+
+</body>
+</html>
