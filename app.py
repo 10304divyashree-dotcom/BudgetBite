@@ -7,14 +7,18 @@ app.secret_key = "foodbudget"
 
 
 foods = [
-{"id":1,"name":"Chicken Biryani","price":180,"image":"chicken_biryani.jpg","category":"biryani"},
-{"id":2,"name":"Pizza","price":200,"image":"pizza.jpg","category":"pizza"},
-{"id":3,"name":"Dosa","price":80,"image":"dosa.jpg","category":"south"},
-{"id":4,"name":"Noodles","price":120,"image":"noodles.jpg","category":"chinese"},
-{"id":5,"name":"Burger","price":150,"image":"burger.jpg","category":"fastfood"},
-{"id":6,"name":"Fried Rice","price":140,"image":"fried_rice.jpg","category":"chinese"},
-{"id":7,"name":"Sandwich","price":90,"image":"sandwich.jpg","category":"fastfood"},
-{"id":8,"name":"Ice Cream","price":70,"image":"ice_cream.jpg","category":"dessert"}
+{"id":1,"name":"Chicken Briyani","price":180,"image":"chicken_biryani.jpg","category":"biryani"},
+{"id":2,"name":"Mutton Briyani","price":200,"image":"mutton_briyani.jpg","category":"biryani"},
+{"id":3,"name":"Pizza","price":200,"image":"pizza.jpg","category":"pizza"},
+{"id":4,"name":"Dosa","price":80,"image":"dosa.jpg","category":"south"},
+{"id":5,"name":"Noodles","price":120,"image":"noodles.jpg","category":"chinese"},
+{"id":6,"name":"Fried Rice","price":120,"image":"fried_rice.jpg","category":"chinese"},
+{"id":7,"name":"Chicken Fried Rice","price":150,"image":"chickenfriedrice.jpg","category":"chinese"},
+{"id":8,"name":"Sandwich","price":90,"image":"sandwich.jpg","category":"fastfood"},
+{"id":9,"name":"Burger","price":150,"image":"burger.jpg","category":"fastfood"},
+{"id":10,"name":"Vanilla Ice Cream","price":50,"image":"ice_cream.jpg","category":"dessert"},
+{"id":11,"name":"Chocolate Ice Cream","price":70,"image":"chocolate_icecream.jpg","category":"dessert"},
+{"id":12,"name":"Butter Scotch Ice Cream","price":70,"image":"butterscotch_icecream.jpg","category":"dessert"}
 ]
 
 
@@ -228,6 +232,65 @@ def remove(id):
         session.modified = True
 
     return redirect("/cart")
+
+@app.route("/buy_now/<int:id>")
+def buy_now(id):
+
+    if "user_id" not in session:
+        return redirect("/")
+
+    # Find selected food
+    selected_food = None
+    for food in foods:
+        if food["id"] == id:
+            selected_food = food
+            break
+
+    if not selected_food:
+        return redirect("/home")
+
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    # Get budget + spent
+    c.execute(
+        "SELECT budget, spent FROM users WHERE id=?",
+        (session["user_id"],)
+    )
+
+    data = c.fetchone()
+    budget = data[0]
+    spent = data[1]
+
+    # Check budget
+    if spent + selected_food["price"] > budget:
+        conn.close()
+        flash("⚠️ Not enough budget!", "danger")
+        return redirect("/home")
+
+    # Insert order
+    c.execute(
+        "INSERT INTO orders (user_id, food_name, price, order_time) VALUES (?,?,?,?)",
+        (
+            session["user_id"],
+            selected_food["name"],
+            selected_food["price"],
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        )
+    )
+
+    # Update spent
+    c.execute(
+        "UPDATE users SET spent = spent + ? WHERE id=?",
+        (selected_food["price"], session["user_id"])
+    )
+
+    conn.commit()
+    conn.close()
+
+    flash("✅ Order placed instantly!", "success")
+
+    return redirect("/orders")
 # CART PAGE
 @app.route("/cart")
 def cart():
