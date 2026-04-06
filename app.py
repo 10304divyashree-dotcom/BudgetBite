@@ -80,9 +80,12 @@ def register():
         )
 
         conn.commit()
+
+        session["user_id"]=c.lastrowid
+        session["name"]=name
         conn.close()
 
-        return redirect("/")
+        return redirect("/budget")
 
     return render_template("register.html")
 
@@ -110,7 +113,7 @@ def login_user():
         session["user_id"] = user[0]
         session["name"] = user[1]
 
-        return redirect("/budget")
+        return redirect("/home")
 
     return "Invalid Login"
 
