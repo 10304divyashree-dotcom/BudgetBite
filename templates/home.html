@@ -341,24 +341,40 @@ position:fixed;
 top:20px;
 right:20px;
 padding:15px 25px;
-border-radius:8px;
+border-radius:10px;
 color:white;
 font-weight:bold;
 z-index:1000;
-animation:slideIn 0.5s ease;
+animation:bounceIn 0.6s ease;
 }
 
+/* Bounce Animation */
+@keyframes bounceIn{
+0%{transform:scale(0.5); opacity:0;}
+60%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+/* Success (Green) */
 .popup.success{
 background:#28a745;
 }
 
+/* Error (Red) */
 .popup.danger{
 background:#dc3545;
 }
 
-@keyframes slideIn{
-from{right:-300px;}
-to{right:20px;}
+/* Funny Emoji Animation */
+.popup::after{
+content:" 🎉";
+display:inline-block;
+animation:emojiMove 0.6s infinite alternate;
+}
+
+@keyframes emojiMove{
+from{transform:translateY(0);}
+to{transform:translateY(-5px);}
 }
 .shake{
 animation:shake 0.4s;
@@ -387,6 +403,14 @@ line-height:22px;
 font-weight:bold;
 color:white;
 transition:0.4s ease;
+}
+
+.restaurant-name{
+text-align:center;
+margin-top:8px;
+font-size:14px;
+color:#d4a017;
+opacity:0.6; 
 }
 </style>
 
@@ -533,7 +557,7 @@ transition:0.4s ease;
 </div>
 
 
-<h2 style="text-align:center;">Popular Restaurants</h2>
+<h2 style="text-align:center;">Popular Food Items</h2>
 
 
 <div class="food-grid">
@@ -561,6 +585,7 @@ transition:0.4s ease;
 <a href="/buy_now/{{food.id}}">
 <button class="order-btn">Place Order</button>
 </a>
+<p class="restaurant-name">{{food.hotel}}</p>
 
 </div>
 
@@ -610,15 +635,43 @@ transition:0.4s ease;
 </footer>
 <script>
 setTimeout(()=>{
-  let popup = document.getElementById("popup");
-  if(popup){
-    if(popup.classList.contains("danger")){
-      popup.classList.add("shake");
-    }
-    setTimeout(()=>{ popup.style.display="none"; },2000);
-  }
-},500);
-</script>
 
+  let popup = document.getElementById("popup");
+
+  if(popup){
+
+    // 🎊 FULL SCREEN CONFETTI (3 seconds)
+    let duration = 3 * 1000;
+    let end = Date.now() + duration;
+
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 }
+      });
+
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 }
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+
+    // ⏳ Hide popup
+    setTimeout(()=>{
+      popup.style.display="none";
+    },2500);
+  }
+
+},200);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>
