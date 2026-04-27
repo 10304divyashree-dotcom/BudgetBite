@@ -291,7 +291,7 @@ def buy_now(id):
     conn.commit()
     conn.close()
 
-    flash("✅ Order placed instantly!", "success")
+    flash("Order placed instantly!", "success")
 
     return redirect("/orders")
 # CART PAGE
@@ -380,7 +380,7 @@ def place_order():
 
     session["cart"] = []
 
-    flash("✅ Order placed successfully!", "success")
+    flash("Order placed successfully!", "success")
 
     return redirect("/orders")
 
